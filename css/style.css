@@ -29,7 +29,7 @@
   width: 60px;
 }
 
-td
+td:not(.cls_prod)
 {
   text-align: center;
 }

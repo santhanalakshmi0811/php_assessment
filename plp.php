@@ -101,10 +101,10 @@ else{
                       ?>
                                                    
                            <tr>
-                              <td>
+                              <td class='cls_prod'>
                                   <a href="pdp.php?id=<?php echo $prod_id;?>">
-                                      <img src="images/<?php echo $row['img_url'];?>" width="50" height="50">
-                                      <?php echo $row['prod_name'];?>
+                                      <span><img src="images/<?php echo $row['img_url'];?>" width="50" height="50">
+                                      <?php echo $row['prod_name'];?></span>
                                    </a>
                               </td>
                               <td>
@@ -146,7 +146,6 @@ else{
                  <?php
                  if(!empty($_SESSION["cart_item"])) {
                  ?>
-                     <input type="search" name="cart_search" id="cart_search"></br>
                      <h3>CART</h3>
                      <table>
                      <?php
