@@ -26,5 +26,10 @@
 
 .num_input
 {
-  width: 40px;
+  width: 60px;
+}
+
+td
+{
+  text-align: center;
 }

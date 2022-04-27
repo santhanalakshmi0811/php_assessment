@@ -1,10 +1,16 @@
 <?php
 session_start();
+
+// for databaase access
 require_once "dbclass.php";
 $db = new DB();
+
+// add to cart section
 if($_POST['mode']=='add'){
     $prodid = $_POST['prodid'];
     $qty = $_POST['qty'];
+    if($qty>1000)
+        $qty = 1000;
     $prod_data = $db->runQuery("SELECT * FROM tblproduct where prod_id=$prodid");
     $prod_arr = array($prod_data[0]["prod_id"]=>array('name'=>$prod_data[0]["prod_name"], 'code'=>$prod_data[0]["prod_id"], 
                       'quantity'=>$qty, 'price'=>$prod_data[0]["price"], 'image'=> $prod_data[0]['img_url']));
@@ -31,7 +37,7 @@ if($_POST['mode']=='add'){
 }
 
 
-
+// remove cart section
 if($_POST['mode']=='remove'){
     if(!empty($_SESSION["cart_item"])) {
         foreach($_SESSION["cart_item"] as $key => $val) {

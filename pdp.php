@@ -1,12 +1,9 @@
 <?php
-/*$user = "root";
-$password = "Admin@123";
-$database = "php_assignment";
-$table = "tblproduct";
-$db = new PDO("mysql:host=localhost;dbname=$database", $user, $password);*/
 
+// for database access
 require_once "dbclass.php";
 $db = new DB();
+
 $prodid =  $_GET['id'];
 $prod_data = $db->runQuery("SELECT * FROM tblproduct where prod_id=$prodid");
 

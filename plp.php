@@ -1,26 +1,30 @@
 <?php
 session_start();
+
+// For database access
 require_once "dbclass.php";
 $db = new DB();
 
+// For search flow
+$selqry_def = "SELECT * FROM tblproduct ORDER BY prod_name asc";
 if (!empty($_POST)){
     
     if($_POST['cat_change']=='all'){
-       $selqry = "SELECT * FROM tblproduct";
+       $selqry = $selqry_def;
     }
     if($_POST['prod_search']!=''){
-        $selqry = "SELECT * FROM tblproduct WHERE prod_name like '%".$_POST['prod_search']."%'";
+        $selqry = "SELECT * FROM tblproduct WHERE prod_name like '%".$_POST['prod_search']."%' ORDER BY prod_name asc";
     }
     if($_POST['cat_change']!='all'){
-        $selqry = "SELECT * FROM tblproduct WHERE category ='".$_POST['cat_change']."'";
+        $selqry = "SELECT * FROM tblproduct WHERE category ='".$_POST['cat_change']."' ORDER BY prod_name asc";
     }           
     if($_POST['show_all']!=''){
-        $selqry = "SELECT * FROM tblproduct";
+        $selqry = $selqry_def;
     }
 
 }
 else{
-    $selqry = "SELECT * FROM tblproduct";
+    $selqry = $selqry_def;
 }
 
 ?>
@@ -49,11 +53,16 @@ else{
     <body>
          <div class='row'>
              <div class="column left">
+               <!---- Filter section start  -------------------->
                 <form method="post" name="frm_search" id="frm_search" action="<?php echo $_SERVER[‘PHP_SELF’];?>">
                  <table>
                      <tr>
                          <td><input type="search" name="prod_search" id="prod_search" value="<?php echo $_POST['prod_search'];?>"></td>
                          <td>
+                            <?php
+                            if($_POST['show_all']!='')
+                                  $_POST['cat_change'] = 'all';
+                            ?>
                             <select name="cat_change" id="cat_change">
                                 <option value='all' <?php echo $_POST['cat_change']=='all'?'selected':'';?>>All categories</option>
                                 <option value='electronics' <?php echo $_POST['cat_change']=='electronics'?'selected':'';?> >Electornics</option>
@@ -72,12 +81,16 @@ else{
                      </tr>
                  </table>
                  </form>
+                 <!----  Filter section end   ---->
+
+                 <!----  Show product list start   ----->
                  <table id="tbl_product">
                      <thead>
 		          <tr>
-		              <th>PRODUCT</th>
+                              <th>PRODUCT</th>
 	                      <th>SKU</th>
 	                      <th>PRICE</th>
+                              <th>Quantity</th>
 	                      <th>ACTION</th> 
                           </tr>
                      </thead>
@@ -92,7 +105,7 @@ else{
                                   <a href="pdp.php?id=<?php echo $prod_id;?>">
                                       <img src="images/<?php echo $row['img_url'];?>" width="50" height="50">
                                       <?php echo $row['prod_name'];?>
-                                  </a>
+                                   </a>
                               </td>
                               <td>
                                  <span id="<?php echo 'sku_'.$prod_id;?>"> 
@@ -107,6 +120,8 @@ else{
                               </td>
                               <td>
                                   <input type="number" min="1" max="1000" value="1" id="<?php echo 'qty_'.$prod_id;?>" class="num_input">
+                              </td>
+                              <td>
                                   <input type="button" value="ADD TO CART" onclick="add_to_cart(<?php echo $prod_id;?>);">
                               </td>
                           </tr>
@@ -115,12 +130,18 @@ else{
                      ?>
                      </tbody>
                  </table>
+                 <!--- Show product list end    ------>
+
+                 <!----  hidden form for add to cart function      ------>
                  <form name="frm_add" id="frm_add" method="post" action="post.php">
                      <input type="hidden" name="prodid" id="prodid">
                      <input type="hidden" name="qty" id="qty">
                      <input type="hidden" name="mode" id="mode">
                  </form>
+                 <!--- hidden form end    ------>
              </div>
+
+             <!--   view cart start  ------>
              <div class="column right">
                  <?php
                  if(!empty($_SESSION["cart_item"])) {
@@ -146,6 +167,7 @@ else{
                   }
                   ?>
              </div>
+             <!--- view cart end ---->
          </div>
     </body>
 </html>
